@@ -7,35 +7,9 @@ const toText = document.querySelector(".to-text");
 const exchange = document.querySelector(".fa-exchange-alt")
 
 
-selectTag.forEach((tag, id)=>{
-    for (const countryCode in countries) {
-        let selected;
-        if(id == 0 && countryCode == "en-GB"){
-            selected = "selected"
-        } else if(id == 1 && countryCode == "fr-FR"){
-            selected = "selected"
-        }
-        let option = `<option value="${countryCode}" ${selected}>${countries[countryCode]}</option>`;
-        tag.insertAdjacentHTML("beforeend", option)
-    }
-});
 
-function translate(){
-        toText.placeholder = 'Translating.....'
-    let text =  fromText.value;
-    let translateFrom = selectTag[0].value; 
-    let translateTo = selectTag[1].value;
-    let apiUrl = fetch (`https://api.mymemory.translated.net/get?q=${text}&langpair=${translateFrom}|${translateTo}`)
-    apiUrl
-        .then((res)=>{
-            return res.json()
-        }).then((result)=>{
-            let answer = result.responseData.translatedText
-            toText.innerHTML = answer
-        }).catch(()=>{
-            console.log ('error translating')
-        })
-    }
+
+
 
 translateBtn.addEventListener("click",()=>{
     if(!fromText.value) return
@@ -80,13 +54,56 @@ copyTo.addEventListener("click", ()=>{
 })
 
 
+// functions
+
 function copy (text){
 
-    navigator.clipboard.writeText(text)
+    if(!text) {
+        translateBtn.innerHTML = 'Nothing to copy'
+
+        setTimeout(()=>{
+            translateBtn.innerHTML = 'Translate Text'
+        }, 1500)
+    } else {
+        navigator.clipboard.writeText(text)
 
     translateBtn.innerHTML = 'Copied'
 
     setTimeout(()=>{
         translateBtn.innerHTML = 'Translate Text'
     },1500)
+    }
+
+    
 }
+
+function translate(){
+        toText.placeholder = 'Translating.....'
+    let text =  fromText.value;
+    let translateFrom = selectTag[0].value; 
+    let translateTo = selectTag[1].value;
+    let apiUrl = fetch (`https://api.mymemory.translated.net/get?q=${text}&langpair=${translateFrom}|${translateTo}`)
+    apiUrl
+        .then((res)=>{
+            return res.json()
+        }).then((result)=>{
+            let answer = result.responseData.translatedText
+            toText.innerHTML = answer
+        }).catch(()=>{
+            console.log ('error translating')
+        })
+    }
+
+
+    selectTag.forEach((tag, id)=>{
+    for (const countryCode in countries) {
+        let selected;
+        if(id == 0 && countryCode == "en-GB"){
+            selected = "selected"
+        } else if(id == 1 && countryCode == "fr-FR"){
+            selected = "selected"
+        }
+        let option = `<option value="${countryCode}" ${selected}>${countries[countryCode]}</option>`;
+        tag.insertAdjacentHTML("beforeend", option)
+    }
+});
