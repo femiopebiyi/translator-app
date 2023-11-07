@@ -88,7 +88,8 @@ function translate(){
             return res.json()
         }).then((result)=>{
             let answer = result.responseData.translatedText
-            toText.innerHTML = answer
+            toText.textContent = answer
+            console.log(answer)
         }).catch(()=>{
             console.log ('error translating')
         })
@@ -107,3 +108,30 @@ function translate(){
         tag.insertAdjacentHTML("beforeend", option)
     }
 });
+
+
+function readAloud(speechValue, language){
+    let utterance = new SpeechSynthesisUtterance(speechValue)
+    utterance.lang = language.value
+
+    speechSynthesis.speak(utterance);
+}
+
+// speech
+
+const speech =  document.querySelectorAll(".fa-volume-up");
+
+speech[0].addEventListener("click", function(){
+    readAloud(fromText.value, selectTag[0])
+});
+speech[1].addEventListener("click", function(){
+    readAloud(toText.value, selectTag[1])
+});
+
+selectTag[1].addEventListener("change", ()=>{
+    console.log('changed')
+    if (!fromText.value) return
+    translate()
+})
+
+console.log(selectTag[1].value)
